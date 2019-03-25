@@ -249,6 +249,8 @@ NS_ASSUME_NONNULL_END
 
 + (CRRouteBlock)servingBlockForFileAtPath:(NSString *)filePath fileName:(NSString * _Nullable)fileName contentType:(NSString * _Nullable)contentType contentDisposition:(CRStaticFileContentDisposition)contentDisposition fileSize:(NSUInteger)fileSize shouldCache:(BOOL)shouldCache fileReadingQueue:(nonnull dispatch_queue_t)fileReadingQueue {
     return ^(CRRequest * _Nonnull request, CRResponse * _Nonnull response, CRRouteCompletionBlock  _Nonnull completionHandler) {
+        if (response.statusCode != 200  && response.statusCode != 206)
+            return;
         @autoreleasepool {
             // Send an unimplemented error if we are being requested to serve multipart byte-ranges
             if ( request.range.byteRangeSet.count > 1 ) {
